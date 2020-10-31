@@ -30,7 +30,7 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link" href="ejournals.php">
+    <a class="nav-link" href="ejournal.php">
       <i class="fas fa-fw fa-users"></i>
       <span>E-Journals</span></a>
   </li>
