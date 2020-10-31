@@ -1,5 +1,5 @@
 <?php
-require_once("UserModel.php");
+// require_once("UserModel.php");
 $clsUser = new User();
 class User
 {
@@ -272,44 +272,44 @@ class User
 		}
 	}
 
-	public function ModelTransfer($result) // not used
-	{
+	// public function ModelTransfer($result) // not used
+	// {
 
-		$mdl = new UserModel();
-		while ($row = mysqli_fetch_array($result)) {
-			$mdl = $this->ToModel($row);
-		}
-		return $mdl;
-	}
+	// 	$mdl = new UserModel();
+	// 	while ($row = mysqli_fetch_array($result)) {
+	// 		$mdl = $this->ToModel($row);
+	// 	}
+	// 	return $mdl;
+	// }
 
-	public function ListTransfer($result) // not used
-	{
-		$lst = array();
-		while ($row = mysqli_fetch_array($result)) {
-			$mdl = new UserModel();
-			$mdl = $this->ToModel($row);
-			array_push($lst, $mdl);
-		}
-		return $lst;
-	}
+	// public function ListTransfer($result) // not used
+	// {
+	// 	$lst = array();
+	// 	while ($row = mysqli_fetch_array($result)) {
+	// 		$mdl = new UserModel();
+	// 		$mdl = $this->ToModel($row);
+	// 		array_push($lst, $mdl);
+	// 	}
+	// 	return $lst;
+	// }
 
-	public function ToModel($row) // not used
-	{
-		$mdl = new UserModel();
-		$mdl->setUser_Id((isset($row['User_Id'])) ? $row['User_Id'] : '');
-		$mdl->setIDNumber((isset($row['IDNumber'])) ? $row['IDNumber'] : '');
-		$mdl->setPassword((isset($row['Password'])) ? $row['Password'] : '');
-		$mdl->setFirstName((isset($row['FirstName'])) ? $row['FirstName'] : '');
-		$mdl->setMiddleName((isset($row['MiddleName'])) ? $row['MiddleName'] : '');
-		$mdl->setLastName((isset($row['LastName'])) ? $row['LastName'] : '');
-		$mdl->setSuffixName((isset($row['SuffixName'])) ? $row['SuffixName'] : '');
-		$mdl->setHomeAddress((isset($row['HomeAddress'])) ? $row['HomeAddress'] : '');
-		$mdl->setContactNumber((isset($row['ContactNumber'])) ? $row['ContactNumber'] : '');
-		$mdl->setEmailAddress((isset($row['EmailAddress'])) ? $row['EmailAddress'] : '');
-		$mdl->setCardExpiration((isset($row['CardExpiration'])) ? $row['CardExpiration'] : '');
-		$mdl->setStatus((isset($row['Status'])) ? $row['Status'] : '');
-		$mdl->setUserType((isset($row['UserType'])) ? $row['UserType'] : '');
-		$mdl->setX_DateCreated((isset($row['X_DateCreated'])) ? $row['X_DateCreated'] : '');
-		return $mdl;
-	}
+	// public function ToModel($row) // not used
+	// {
+	// 	$mdl = new UserModel();
+	// 	$mdl->setUser_Id((isset($row['User_Id'])) ? $row['User_Id'] : '');
+	// 	$mdl->setIDNumber((isset($row['IDNumber'])) ? $row['IDNumber'] : '');
+	// 	$mdl->setPassword((isset($row['Password'])) ? $row['Password'] : '');
+	// 	$mdl->setFirstName((isset($row['FirstName'])) ? $row['FirstName'] : '');
+	// 	$mdl->setMiddleName((isset($row['MiddleName'])) ? $row['MiddleName'] : '');
+	// 	$mdl->setLastName((isset($row['LastName'])) ? $row['LastName'] : '');
+	// 	$mdl->setSuffixName((isset($row['SuffixName'])) ? $row['SuffixName'] : '');
+	// 	$mdl->setHomeAddress((isset($row['HomeAddress'])) ? $row['HomeAddress'] : '');
+	// 	$mdl->setContactNumber((isset($row['ContactNumber'])) ? $row['ContactNumber'] : '');
+	// 	$mdl->setEmailAddress((isset($row['EmailAddress'])) ? $row['EmailAddress'] : '');
+	// 	$mdl->setCardExpiration((isset($row['CardExpiration'])) ? $row['CardExpiration'] : '');
+	// 	$mdl->setStatus((isset($row['Status'])) ? $row['Status'] : '');
+	// 	$mdl->setUserType((isset($row['UserType'])) ? $row['UserType'] : '');
+	// 	$mdl->setX_DateCreated((isset($row['X_DateCreated'])) ? $row['X_DateCreated'] : '');
+	// 	return $mdl;
+	// }
 }

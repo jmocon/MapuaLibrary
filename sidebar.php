@@ -72,13 +72,13 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link" href="charts.html">
+    <a class="nav-link" href="branch.php">
       <i class="fas fa-fw fa-map-marker-alt"></i>
       <span>Branch</span></a>
   </li>
 
   <li class="nav-item">
-    <a class="nav-link" href="charts.html">
+    <a class="nav-link" href="subject.php">
       <i class="fas fa-fw fa-icons"></i>
       <span>Subjects</span></a>
   </li>
