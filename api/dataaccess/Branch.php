@@ -2,7 +2,6 @@
 $clsBranch = new Branch();
 class Branch
 {
-
   private $table = "branch";
 
   public function __construct()
@@ -13,7 +12,6 @@ class Branch
   {
     $db = new Database();
     $mysqli = $db->mysqli;
-
     $query = "INSERT INTO `" . $this->table . "`
 			(
 				`Name`,
@@ -59,7 +57,6 @@ class Branch
     $db = new Database();
     $mysqli = $db->mysqli;
     $lst = array();
-
     $query = "SELECT * FROM `" . $this->table . "`";
     $result = $mysqli->query($query);
     $mysqli->close();
@@ -73,7 +70,6 @@ class Branch
   {
     $db = new Database();
     $mysqli = $db->mysqli;
-
     $query = "SELECT *
               FROM `" . $this->table . "`
               WHERE `Branch_Id` = '" . $db->Escape($value) . "'";
@@ -132,7 +128,6 @@ class Branch
     $result = $mysqli->query($query);
     $mysqli->close();
     if ($result->fetch_object()->CNT > 0) {
-
       return true;
     }
     return false;

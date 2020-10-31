@@ -11,6 +11,15 @@ $(document).ready(function () {
     }
   });
 
+  $('#dataTable tfoot th').each(function () {
+    var title = $(this).text();
+    $(this).html(
+      '<input type="text" class="form-control" placeholder="Search ' +
+        title +
+        '" />'
+    );
+  });
+
   setInterval(function () {
     table.ajax.reload(null, false); // user paging is not reset on reload
   }, 50000);

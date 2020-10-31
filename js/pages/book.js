@@ -2,7 +2,7 @@ $(document).ready(function () {
   // Datatable
   var table = $('#dataTable').DataTable({
     ajax: {
-      url: 'http://localhost/mapualibrary/api/Subject.php',
+      url: 'http://localhost/mapualibrary/api/Book.php',
       contentType: 'application/json',
       type: 'POST',
       data: function (d) {
@@ -26,32 +26,68 @@ $(document).ready(function () {
   //Datatable End
 });
 
+function DisplayInfo(id) {
+  //Set the modal
+  u = new Utility();
+  u.Loading('#genricModal .modal-body');
+  $('#genricModal .modal-title').html('Book Details');
+  $('#genricModal .modal-footer').html(
+    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
+  );
+
+  var data = {
+    url: 'Book.php',
+    param: {
+      Function: 'getbyid',
+      Book_Id: id
+    }
+  };
+
+  u.SendData(data)
+    .done(function (r) {
+      var alert = {};
+      if (r.Success) {
+        Form(r.Modal, true);
+      } else {
+        alert = {
+          container: '#genricModal .modal-body',
+          type: 'danger',
+          message: 'Book not found. Kindly refresh your browser.'
+        };
+        u.ShowAlert(alert);
+      }
+    })
+    .fail(function (j, t, e) {
+      var alert = {
+        container: '#genricModal .modal-body',
+        type: 'danger',
+        title: 'Failed to connect to Server',
+        message: 'Kindly refresh your browser. - ' + t + e
+      };
+      u.ShowAlert(alert);
+    });
+}
+
 function DisplayAdd() {
-  $('#genricModal .modal-title').html('Add New Subject');
-
-  $('#genricModal .modal-body').html(`
-    <div class="row">
-      <div class="col-12" id="notif"></div>
-    </div>
-    <div class="row">
-      <label for="txtName" class="col-4 col-form-label">Name</label>
-      <div class="col-8">
-        <input type="text" class="form-control" style="text-transform: capitalize;" id="txtName" />
-      </div>
-    </div>
-  `);
-
+  $('#genricModal .modal-title').html('Add New Book');
   $('#genricModal .modal-footer').html(`
       <button type="button" class="btn btn-primary" onclick="Add()">Add</button>
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
   `);
+  Form();
 }
 
 function Add() {
   u = new Utility();
   u.Loading();
   var err = false;
-  if (u.IsEmpty('#txtName')) {
+  if (u.IsEmpty('#txtCode')) {
+    err = true;
+  }
+  if (u.IsEmpty('#txtTitle')) {
+    err = true;
+  }
+  if (err) {
     var alert = {
       type: 'danger',
       message: 'Please complete all fields'
@@ -59,11 +95,17 @@ function Add() {
     u.ShowAlert(alert);
   } else {
     var data = {
-      url: 'Subject.php',
+      url: 'Book.php',
       param: {
         Function: 'add',
         Modal: {
-          Name: $('#txtName').val()
+          Code: $('#txtCode').val(),
+          Keyword: $('#txtKeyword').val(),
+          Title: $('#txtTitle').val(),
+          Author: $('#txtAuthor').val(),
+          Subject_Id: $('#selSubject_Id').val(),
+          Synopsis: $('#txtSynopsis').val(),
+          DatePublished: $('#txtDatePublished').val()
         }
       }
     };
@@ -104,35 +146,20 @@ function Add() {
 function DisplayEdit(id) {
   u = new Utility();
   u.Loading('#genricModal .modal-body');
-  $('#genricModal .modal-title').html('Edit Subject Details');
+  $('#genricModal .modal-title').html('Edit Book Details');
 
   var data = {
-    url: 'Subject.php',
+    url: 'Book.php',
     param: {
       Function: 'getbyid',
-      Subject_Id: id
+      Book_Id: id
     }
   };
 
   u.SendData(data)
     .done(function (r) {
       if (r.Success) {
-        $('#genricModal .modal-body').html(
-          `
-          <div class="row">
-            <div class="col-12" id="notif"></div>
-          </div>
-          <div class="row">
-            <label for="txtName" class="col-4 col-form-label">Name</label>
-            <div class="col-8">
-              <input type="text" class="form-control" style="text-transform: capitalize;" id="txtName" value="` +
-            r.Modal.Name +
-            `" />
-            </div>
-          </div>
-        `
-        );
-
+        Form(r.Modal);
         $('#genricModal .modal-footer').html(
           `
             <button type="button" class="btn btn-primary" onclick="Update(` +
@@ -148,7 +175,7 @@ function DisplayEdit(id) {
         alert = {
           container: '#genricModal .modal-body',
           type: 'danger',
-          message: 'Subject not found. Kindly refresh your browser.'
+          message: 'Book not found. Kindly refresh your browser.'
         };
         u.ShowAlert(alert);
       }
@@ -166,12 +193,18 @@ function DisplayEdit(id) {
 
 function Update(id) {
   var data = {
-    url: 'Subject.php',
+    url: 'Book.php',
     param: {
       Function: 'update',
       Modal: {
-        Subject_Id: id,
-        Name: document.getElementById('txtName').value
+        Book_Id: id,
+        Code: $('#txtCode').val(),
+        Keyword: $('#txtKeyword').val(),
+        Title: $('#txtTitle').val(),
+        Author: $('#txtAuthor').val(),
+        Subject_Id: $('#selSubject_Id').val(),
+        Synopsis: $('#txtSynopsis').val(),
+        DatePublished: $('#txtDatePublished').val()
       }
     }
   };
@@ -206,16 +239,16 @@ function Update(id) {
 function DisplayDelete(id) {
   u = new Utility();
   u.Loading('#genricModal .modal-body');
-  $('#genricModal .modal-title').html('Subject Details');
+  $('#genricModal .modal-title').html('Book Details');
   $('#genricModal .modal-footer').html(
     `<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>`
   );
 
   var data = {
-    url: 'Subject.php',
+    url: 'Book.php',
     param: {
       Function: 'getbyid',
-      Subject_Id: id
+      Book_Id: id
     }
   };
 
@@ -223,29 +256,7 @@ function DisplayDelete(id) {
     .done(function (r) {
       var alert = {};
       if (r.Success) {
-        $('#genricModal .modal-body').html(
-          `
-            <div class="row">
-              <div class="col-12" id="notif"></div>
-            </div>
-            <div class="row">
-              <label for="txtName" class="col-4 col-form-label">Name</label>
-              <div class="col-8">
-                <input type="text" class="form-control-plaintext" id="txtName" value="` +
-            r.Modal.Name +
-            `">
-              </div>
-            </div>
-            <div class="row">
-              <label for="txtAddress" class="col-4 col-form-label">Address</label>
-              <div class="col-8">
-                <input type="text" class="form-control-plaintext" style="text-transform: capitalize;" id="txtAddress" value="` +
-            r.Modal.Address +
-            `">
-              </div>
-            </div>
-        `
-        );
+        Form(r.Modal);
         $('#genricModal .modal-footer').html(
           `
         <button type="button" class="btn btn-danger" onclick="Delete(` +
@@ -257,7 +268,7 @@ function DisplayDelete(id) {
       } else {
         alert = {
           type: 'danger',
-          message: 'Subject not found. Kindly refresh your browser.'
+          message: 'Book not found. Kindly refresh your browser.'
         };
         u.ShowAlert(alert);
       }
@@ -277,10 +288,10 @@ function Delete(id) {
   u = new Utility();
   u.Loading('#genricModal .modal-body');
   var data = {
-    url: 'Subject.php',
+    url: 'Book.php',
     param: {
       Function: 'delete',
-      Subject_Id: id
+      Book_Id: id
     }
   };
 
@@ -317,4 +328,113 @@ function Delete(id) {
   $('#genricModal .modal-footer').html(
     `<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>`
   );
+}
+
+function Form(value = '', viewing = false) {
+  u = new Utility();
+  u.Loading('#genricModal .modal-body');
+
+  var output = `
+    <div class="row">
+        <div class="col-12" id="notif"></div>
+      </div>
+      <div class="row">
+        <label for="txtCode" class="col-4 col-form-label">Code</label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="txtCode" />
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtKeyword" class="col-4 col-form-label">Keyword</label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="txtKeyword" />
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtTitle" class="col-4 col-form-label">Title</label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="txtTitle" />
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtAuthor" class="col-4 col-form-label">Author</label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="txtAuthor" />
+        </div>
+      </div>
+      <div class="row">
+        <label for="selSubject_Id" class="col-4 col-form-label">Subject</label>
+        <div class="col-8">
+          <select class="form-control" id="selSubject_Id"></select>
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtSynopsis" class="col-4 col-form-label">Synopsis</label>
+        <div class="col-8">
+          <textarea type="text" class="form-control" id="txtSynopsis"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtDatePublished" class="col-4 col-form-label">DatePublished</label>
+        <div class="col-8">
+          <input type="date" class="form-control" id="txtDatePublished" />
+        </div>
+      </div>
+  `;
+  $('#genricModal .modal-body').html(output);
+
+  if (viewing) {
+    $('#genricModal input').addClass('form-control-plaintext');
+    $('#genricModal input').removeClass('form-control');
+    $('#genricModal input').attr('readonly', true);
+
+    $('#genricModal textarea').addClass('form-control-plaintext');
+    $('#genricModal textarea').removeClass('form-control');
+    $('#genricModal textarea').attr('readonly', true);
+
+    $('#genricModal select').addClass('form-control-plaintext');
+    $('#genricModal select').removeClass('form-control');
+    $('#genricModal select').attr('disabled', true);
+  }
+
+  var data = {
+    url: 'Subject.php',
+    param: {
+      Function: 'dropdown'
+    }
+  };
+  u.SendData(data)
+    .done(function (r) {
+      if (r.Success) {
+        r.List.map(function (item) {
+          $('#selSubject_Id').append(new Option(item.Name, item.Subject_Id));
+        });
+
+        if (value) {
+          $('#txtCode').val(value.Code);
+          $('#txtKeyword').val(value.Keyword);
+          $('#txtTitle').val(value.Title);
+          $('#txtAuthor').val(value.Author);
+          $('#selSubject_Id').val(value.Subject_Id);
+          $('#txtSynopsis').val(value.Synopsis);
+          $('#txtDatePublished').val(value.DatePublished);
+        }
+      } else {
+        alert = {
+          container: '#genricModal .modal-body',
+          type: 'danger',
+          message: r.Message
+        };
+        u.ShowAlert(alert);
+      }
+    })
+    .fail(function (j, t, e) {
+      var alert = {
+        container: '#genricModal .modal-body',
+        type: 'danger',
+        title: 'Failed to connect to Server',
+        message: 'Kindly refresh your browser. - ' + t + e
+      };
+      u.ShowAlert(alert);
+    });
 }

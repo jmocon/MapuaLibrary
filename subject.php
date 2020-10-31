@@ -80,7 +80,7 @@ if (!isset($_SESSION["User_Id"])) {
                   <tfoot>
                     <tr>
                       <th>Name</th>
-                      <th>Action</th>
+                      <td>Action</td>
                     </tr>
                   </tfoot>
                   <tbody>

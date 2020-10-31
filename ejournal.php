@@ -59,10 +59,10 @@ if (!isset($_SESSION["User_Id"])) {
           <!-- Page Heading -->
           <div class="row">
             <div class="col">
-              <h1 class="h3 mb-2 text-gray-800">Users</h1>
+              <h1 class="h3 mb-2 text-gray-800">E-Journals</h1>
             </div>
             <div class="col">
-              <button class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#genricModal" onclick="DisplayAdd()">Add new User</button>
+              <button class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#genricModal" onclick="DisplayAdd()">Add new E-Journal</button>
             </div>
           </div>
 
@@ -73,24 +73,19 @@ if (!isset($_SESSION["User_Id"])) {
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>ID Number</th>
-                      <th>Type</th>
                       <th>Name</th>
-                      <th>Email Address</th>
+                      <th>Link</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>ID Number</th>
-                      <th>Type</th>
                       <th>Name</th>
-                      <th>Email Address</th>
+                      <th>Link</th>
                       <td>Action</td>
                     </tr>
                   </tfoot>
                   <tbody>
-
                   </tbody>
                 </table>
               </div>
@@ -141,7 +136,7 @@ if (!isset($_SESSION["User_Id"])) {
 
   <!-- Customm JS -->
   <script type="text/javascript" src="js/utility.js"></script>
-  <script type="text/javascript" src="js/pages/user.js"></script>
+  <script type="text/javascript" src="js/pages/ejournal.js"></script>
 
 
 </body>
