@@ -19,7 +19,7 @@ switch ($data->Function) {
 
       $output->Success = true;
       $output->Message = "Successfully retrieved subjects";
-      $output->List = $clsSubject->Get();
+      $output->List = $clsSubject->GetDropdown();
       break;
     }
   case 'datatable': {
@@ -34,6 +34,9 @@ switch ($data->Function) {
                   </button>';
         $arr = [
           $mdl->Name,
+          $mdl->LoanPeriod . " hours",
+          $mdl->Penalty . " php",
+          $mdl->Overdue . " hours",
           $action
         ];
         array_push($output->data, $arr);

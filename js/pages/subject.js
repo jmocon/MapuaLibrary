@@ -29,17 +29,7 @@ $(document).ready(function () {
 function DisplayAdd() {
   $('#genricModal .modal-title').html('Add New Subject');
 
-  $('#genricModal .modal-body').html(`
-    <div class="row">
-      <div class="col-12" id="notif"></div>
-    </div>
-    <div class="row">
-      <label for="txtName" class="col-4 col-form-label">Name</label>
-      <div class="col-8">
-        <input type="text" class="form-control" style="text-transform: capitalize;" id="txtName" />
-      </div>
-    </div>
-  `);
+  Form();
 
   $('#genricModal .modal-footer').html(`
       <button type="button" class="btn btn-primary" onclick="Add()">Add</button>
@@ -63,7 +53,10 @@ function Add() {
       param: {
         Function: 'add',
         Modal: {
-          Name: $('#txtName').val()
+          Name: $('#txtName').val(),
+          LoanPeriod: $('#txtLoanPeriod').val(),
+          Penalty: $('#txtPenalty').val(),
+          Overdue: $('#txtOverdue').val()
         }
       }
     };
@@ -117,21 +110,7 @@ function DisplayEdit(id) {
   u.SendData(data)
     .done(function (r) {
       if (r.Success) {
-        $('#genricModal .modal-body').html(
-          `
-          <div class="row">
-            <div class="col-12" id="notif"></div>
-          </div>
-          <div class="row">
-            <label for="txtName" class="col-4 col-form-label">Name</label>
-            <div class="col-8">
-              <input type="text" class="form-control" style="text-transform: capitalize;" id="txtName" value="` +
-            r.Modal.Name +
-            `" />
-            </div>
-          </div>
-        `
-        );
+        Form(r.Modal);
 
         $('#genricModal .modal-footer').html(
           `
@@ -171,7 +150,10 @@ function Update(id) {
       Function: 'update',
       Modal: {
         Subject_Id: id,
-        Name: document.getElementById('txtName').value
+        Name: $('#txtName').val(),
+        LoanPeriod: $('#txtLoanPeriod').val(),
+        Penalty: $('#txtPenalty').val(),
+        Overdue: $('#txtOverdue').val()
       }
     }
   };
@@ -223,32 +205,9 @@ function DisplayDelete(id) {
     .done(function (r) {
       var alert = {};
       if (r.Success) {
-        $('#genricModal .modal-body').html(
-          `
-            <div class="row">
-              <div class="col-12" id="notif"></div>
-            </div>
-            <div class="row">
-              <label for="txtName" class="col-4 col-form-label">Name</label>
-              <div class="col-8">
-                <input type="text" class="form-control-plaintext" id="txtName" value="` +
-            r.Modal.Name +
-            `">
-              </div>
-            </div>
-            <div class="row">
-              <label for="txtAddress" class="col-4 col-form-label">Address</label>
-              <div class="col-8">
-                <input type="text" class="form-control-plaintext" style="text-transform: capitalize;" id="txtAddress" value="` +
-            r.Modal.Address +
-            `">
-              </div>
-            </div>
-        `
-        );
+        Form(r.Modal);
         $('#genricModal .modal-footer').html(
-          `
-        <button type="button" class="btn btn-danger" onclick="Delete(` +
+          `<button type="button" class="btn btn-danger" onclick="Delete(` +
             id +
             `)">Confirm Delete</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -317,4 +276,54 @@ function Delete(id) {
   $('#genricModal .modal-footer').html(
     `<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>`
   );
+}
+
+function Form(value = '', viewing = false) {
+  u = new Utility();
+  u.Loading('#genricModal .modal-body');
+
+  var output = `
+    <div class="row">
+        <div class="col-12" id="notif"></div>
+      </div>
+      <div class="row">
+        <label for="txtName" class="col-4 col-form-label">Name</label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="txtName" />
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtLoanPeriod" class="col-4 col-form-label">Loan Period (hours)</label>
+        <div class="col-8">
+          <input type="number" class="form-control" id="txtLoanPeriod" />
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtPenalty" class="col-4 col-form-label">Penalty</label>
+        <div class="col-8">
+          <input type="number" class="form-control" id="txtPenalty" />
+        </div>
+      </div>
+      <div class="row">
+        <label for="txtOverdue" class="col-4 col-form-label">Overdue (hours)</label>
+        <div class="col-8">
+          <input type="number" class="form-control" id="txtOverdue" />
+        </div>
+      </div>
+  `;
+
+  $('#genricModal .modal-body').html(output);
+
+  if (viewing) {
+    $('#genricModal input').addClass('form-control-plaintext');
+    $('#genricModal input').removeClass('form-control');
+    $('#genricModal input').attr('readonly', true);
+  }
+
+  if (value) {
+    $('#txtName').val(value.Name);
+    $('#txtLoanPeriod').val(value.LoanPeriod);
+    $('#txtPenalty').val(value.Penalty);
+    $('#txtOverdue').val(value.Overdue);
+  }
 }

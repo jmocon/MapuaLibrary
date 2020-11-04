@@ -13,12 +13,17 @@ class Subject
   {
     $db = new Database();
     $mysqli = $db->mysqli;
-
     $query = "INSERT INTO `" . $this->table . "`
 			(
-				`Name`
+				`Name`,
+				`LoanPeriod`,
+				`Penalty`,
+				`Overdue`
 			) VALUES (
-				'" . $db->Escape($mdl->Name) . "'
+				'" . $db->Escape($mdl->Name) . "',
+				'" . $db->Escape($mdl->LoanPeriod) . "',
+				'" . $db->Escape($mdl->Penalty) . "',
+				'" . $db->Escape($mdl->Overdue) . "'
 			)";
     $mysqli->query($query);
     $id = $mysqli->insert_id;
@@ -31,8 +36,11 @@ class Subject
     $db = new Database();
     $mysqli = $db->mysqli;
     $query = "UPDATE `" . $this->table . "` SET
-							`Name`='" . $db->Escape($mdl->Name) . "'
-						  WHERE `Subject_Id`='" . $db->Escape($mdl->Subject_Id) . "';";
+						`Name`='" . $db->Escape($mdl->Name) . "',
+						`LoanPeriod`='" . $db->Escape($mdl->LoanPeriod) . "',
+						`Penalty`='" . $db->Escape($mdl->Penalty) . "',
+						`Overdue`='" . $db->Escape($mdl->Overdue) . "'
+            WHERE `Subject_Id`='" . $db->Escape($mdl->Subject_Id) . "'";
     $mysqli->query($query);
     $rows = $mysqli->affected_rows;
     $mysqli->close();
@@ -112,5 +120,24 @@ class Subject
       return true;
     }
     return false;
+  }
+
+
+  public function GetDropdown()
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $query = "SELECT 
+							`Subject_Id`,
+							`Name`
+						FROM `" . $this->table . "`";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
   }
 }

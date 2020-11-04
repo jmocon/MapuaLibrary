@@ -25,19 +25,19 @@
 
   <li class="nav-item">
     <a class="nav-link" href="book.php">
-      <i class="fas fa-fw fa-users"></i>
+      <i class="fas fa-fw fa-book"></i>
       <span>Books</span></a>
   </li>
 
   <li class="nav-item">
     <a class="nav-link" href="ejournal.php">
-      <i class="fas fa-fw fa-users"></i>
+      <i class="fas fa-fw fa-newspaper"></i>
       <span>E-Journals</span></a>
   </li>
 
   <li class="nav-item">
     <a class="nav-link" href="inventory.php">
-      <i class="fas fa-fw fa-users"></i>
+      <i class="fas fa-fw fa-dolly-flatbed"></i>
       <span>Inventory</span></a>
   </li>
 
