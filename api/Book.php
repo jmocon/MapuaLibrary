@@ -15,6 +15,13 @@ switch ($data->Function) {
       $output->Modal = $mdl;
       break;
     }
+  case 'dropdown': {
+
+      $output->Success = true;
+      $output->Message = "Successfully retrieved book";
+      $output->List = $clsBook->GetDropdown();
+      break;
+    }
   case 'datatable': {
       $lst = $clsBook->GetDataTable();
       $output->data = array();

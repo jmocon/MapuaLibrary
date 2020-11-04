@@ -19,7 +19,7 @@ if (!isset($_SESSION["User_Id"])) {
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Users | Mapúa Library</title>
+  <title>Subject | Mapúa Library</title>
   <link rel="shortcut icon" type="image/png" href="img/favicon-32x32.png" />
 
   <!-- Custom fonts for this template-->
@@ -74,12 +74,18 @@ if (!isset($_SESSION["User_Id"])) {
                   <thead>
                     <tr>
                       <th>Name</th>
+                      <th>Loan Period</th>
+                      <th>Penalty</th>
+                      <th>Overdue</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>Name</th>
+                      <th>Loan Period</th>
+                      <th>Penalty</th>
+                      <th>Overdue</th>
                       <td>Action</td>
                     </tr>
                   </tfoot>

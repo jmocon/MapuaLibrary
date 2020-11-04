@@ -19,7 +19,7 @@ if (!isset($_SESSION["User_Id"])) {
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Users | Mapúa Library</title>
+  <title>Book | Mapúa Library</title>
   <link rel="shortcut icon" type="image/png" href="img/favicon-32x32.png" />
 
   <!-- Custom fonts for this template-->

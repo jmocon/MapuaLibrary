@@ -19,7 +19,7 @@ if (!isset($_SESSION["User_Id"])) {
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>E-Journal | Mapúa Library</title>
+  <title>Inventory | Mapúa Library</title>
   <link rel="shortcut icon" type="image/png" href="img/favicon-32x32.png" />
 
   <!-- Custom fonts for this template-->
@@ -59,10 +59,10 @@ if (!isset($_SESSION["User_Id"])) {
           <!-- Page Heading -->
           <div class="row">
             <div class="col">
-              <h1 class="h3 mb-2 text-gray-800">E-Journals</h1>
+              <h1 class="h3 mb-2 text-gray-800">Inventory</h1>
             </div>
             <div class="col">
-              <button class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#genricModal" onclick="DisplayAdd()">Add new E-Journal</button>
+              <button class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#genricModal" onclick="DisplayAdd()">Add new Inventory</button>
             </div>
           </div>
 
@@ -73,15 +73,21 @@ if (!isset($_SESSION["User_Id"])) {
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Link</th>
+                      <th>Id</th>
+                      <th>Code</th>
+                      <th>Title</th>
+                      <th>Branch</th>
+                      <th>Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Name</th>
-                      <th>Link</th>
+                      <th>Id</th>
+                      <th>Code</th>
+                      <th>Title</th>
+                      <th>Branch</th>
+                      <th>Status</th>
                       <td>Action</td>
                     </tr>
                   </tfoot>
@@ -136,7 +142,7 @@ if (!isset($_SESSION["User_Id"])) {
 
   <!-- Customm JS -->
   <script type="text/javascript" src="js/utility.js"></script>
-  <script type="text/javascript" src="js/pages/ejournal.js"></script>
+  <script type="text/javascript" src="js/pages/inventory.js"></script>
 
 
 </body>

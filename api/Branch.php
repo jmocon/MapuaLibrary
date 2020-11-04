@@ -15,6 +15,13 @@ switch ($data->Function) {
       $output->Modal = $mdl;
       break;
     }
+  case 'dropdown': {
+
+      $output->Success = true;
+      $output->Message = "Successfully retrieved branches";
+      $output->List = $clsBranch->GetDropdown();
+      break;
+    }
   case 'datatable': {
       $lst = $clsBranch->GetDataTable();
       $output->data = array();

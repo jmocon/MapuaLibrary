@@ -162,4 +162,22 @@ class Book
     }
     return false;
   }
+
+  public function GetDropdown()
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $query = "SELECT 
+                `Book_Id` AS `Value`,
+                CONCAT(`Title`,' by ',`Author`) AS `Text`
+              FROM `book`";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
+  }
 }

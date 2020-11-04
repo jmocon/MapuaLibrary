@@ -35,6 +35,12 @@
       <span>E-Journals</span></a>
   </li>
 
+  <li class="nav-item">
+    <a class="nav-link" href="inventory.php">
+      <i class="fas fa-fw fa-users"></i>
+      <span>Inventory</span></a>
+  </li>
+
   <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
