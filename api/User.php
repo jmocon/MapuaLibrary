@@ -4,6 +4,9 @@ require_once("dataaccess/Database.php");
 require_once("dataaccess/User.php");
 
 $data = json_decode(file_get_contents('php://input'));
+// For output (JSON)
+// Must have: Success(bool), Message(any)
+$output = new stdClass;
 
 switch ($data->Function) {
   case 'login': {
@@ -12,31 +15,29 @@ switch ($data->Function) {
       $admin = $data->Admin;
       $user_Id = $clsUser->Login($idnumber, $password, $admin);
       if (!empty($user_Id)) {
-        $output = new stdClass;
         $output->Success = true;
         $output->User_Id = $user_Id;
         $_SESSION["User_Id"] = $user_Id;
-        echo json_encode($output);
       } else {
-        $output = new stdClass;
         $output->Success = false;
         $output->Message = "Authentication Failed.";
-        echo json_encode($output);
       }
+      break;
+    }
+  case 'dropdown': {
+      $output->Success = true;
+      $output->Message = "Successfully retrieved user";
+      $output->List = $clsUser->GetDropdown();
       break;
     }
   case 'getuser': {
       $mdlUser = $clsUser->GetByUser_Id($data->User_Id);
-      $output = new stdClass;
       $output->Success = true;
       $output->Modal = $mdlUser;
-      echo json_encode($output);
       break;
     }
   case 'getdatatable': {
       $lstUser = $clsUser->GetTable();
-
-      $output = new stdClass;
       $output->data = array();
 
       foreach ($lstUser as $mdlUser) {
@@ -81,11 +82,9 @@ switch ($data->Function) {
         ];
         array_push($output->data, $arr);
       }
-      echo json_encode($output);
       break;
     }
   case 'adduser': {
-      $output = new stdClass;
       if ($clsUser->IsExistIDNumber($data->Modal->IDNumber)) {
         $output->Success = false;
         $output->Message = "ID Number already exist";
@@ -99,12 +98,10 @@ switch ($data->Function) {
           $output->Message = "No user was added.";
         }
       }
-      echo json_encode($output);
       break;
     }
   case 'saveuser': {
       $rows_affected = $clsUser->Update($data->Modal);
-      $output = new stdClass;
       if ($rows_affected > 0) {
         $output->Success = true;
         $output->Message = "Successfully Updated User.";
@@ -117,12 +114,10 @@ switch ($data->Function) {
           $output->Message = "No user was updated.";
         }
       }
-      echo json_encode($output);
       break;
     }
   case 'deleteuser': {
       $rows_affected = $clsUser->Delete($data->User_Id);
-      $output = new stdClass;
       if ($rows_affected > 0) {
         $output->Success = true;
         $output->Message = "Successfully Deleted User.";
@@ -130,12 +125,10 @@ switch ($data->Function) {
         $output->Success = false;
         $output->Message = "No user was deleted.";
       }
-      echo json_encode($output);
       break;
     }
   case 'resetpassword': {
       $rows_affected = $clsUser->Delete($data->User_Id);
-      $output = new stdClass;
       if ($rows_affected > 0) {
         $output->Success = true;
         $output->Message = "Successfully Deleted User.";
@@ -143,14 +136,11 @@ switch ($data->Function) {
         $output->Success = false;
         $output->Message = "No user was deleted.";
       }
-      echo json_encode($output);
       break;
     }
   case 'isexistidnumber': {
-      $output = new stdClass;
       $output->Success = true;
       $output->Message = $clsUser->IsExistIDNumber($data->IDNumber);
-      echo json_encode($output);
       break;
     }
 
@@ -158,3 +148,5 @@ switch ($data->Function) {
     # code...
     break;
 }
+
+echo json_encode($output);

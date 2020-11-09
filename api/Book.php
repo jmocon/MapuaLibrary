@@ -16,7 +16,6 @@ switch ($data->Function) {
       break;
     }
   case 'dropdown': {
-
       $output->Success = true;
       $output->Message = "Successfully retrieved book";
       $output->List = $clsBook->GetDropdown();

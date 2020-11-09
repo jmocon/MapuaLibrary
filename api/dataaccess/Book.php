@@ -171,7 +171,7 @@ class Book
 
     $query = "SELECT 
                 `Book_Id` AS `Value`,
-                CONCAT(`Title`,' by ',`Author`) AS `Text`
+                CONCAT(`Code`,': ',`Title`,' by ',`Author`) AS `Text`
               FROM `book`";
     $result = $mysqli->query($query);
     $mysqli->close();

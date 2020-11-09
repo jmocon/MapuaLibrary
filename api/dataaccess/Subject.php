@@ -140,4 +140,23 @@ class Subject
     }
     return $lst;
   }
+
+  public function GetLoanPeriodByInventory_Id($value)
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $query = "SELECT 
+                S.`LoanPeriod`
+              FROM `inventory` I
+              INNER JOIN `Book` B
+              ON I.`Book_Id` = B.`Book_Id`
+              INNER JOIN `Subject` S
+              ON B.`Subject_Id` = S.`Subject_Id`
+              Where I.`Inventory_Id` = '" . $value . "'";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    return $result->fetch_object()->LoanPeriod;
+  }
 }

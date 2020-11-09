@@ -15,6 +15,12 @@ switch ($data->Function) {
       $output->Modal = $mdl;
       break;
     }
+  case 'dropdown': {
+      $output->Success = true;
+      $output->Message = "Successfully retrieved inventory";
+      $output->List = $clsInventory->GetDropdown();
+      break;
+    }
   case 'datatable': {
       $lst = $clsInventory->GetDataTable();
       $output->data = array();

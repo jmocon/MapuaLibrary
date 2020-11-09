@@ -130,4 +130,27 @@ class Inventory
     }
     return $lst;
   }
+
+  public function GetDropdown()
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $query = "SELECT 
+                `Inventory_Id` AS `Value`,
+                CONCAT(B.`Code`,': ',B.`Title`,' by ',B.`Author`, ' - ', C.Name) AS `Text`
+              FROM `inventory` A
+              INNER JOIN `book` B
+              ON A.Book_Id = B.Book_Id
+              INNER JOIN `branch` C
+              ON A.Branch_Id = C.Branch_Id
+              ";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
+  }
 }
