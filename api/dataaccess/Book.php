@@ -112,13 +112,113 @@ class Book
     return $result->fetch_object();
   }
 
+  public function SearchBook($keyword, $code, $title, $author, $limit = 5, $offset = 0)
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $keyword = $db->Escape($keyword);
+    $code = $db->Escape($code);
+    $title = $db->Escape($title);
+    $author = $db->Escape($author);
+    $limit = $db->Escape($limit);
+    $offset = $db->Escape($offset);
+
+    $score = "";
+    $where = "";
+
+    // Keyword
+    if (!empty($keyword)) {
+      if ($where == "") {
+        $where = "WHERE MATCH(`Keyword`) AGAINST('" . $keyword . "') ";
+      }
+
+      if ($score == "") {
+        $score = "MATCH(`Keyword`) AGAINST('" . $keyword . "')";
+      }
+    }
+
+    // Title
+    if (!empty($title)) {
+      if ($where == "") {
+        $where .= "WHERE MATCH(`Title`) AGAINST('" . $title . "') ";
+      } else {
+        $where .= "AND MATCH(`Title`) AGAINST('" . $title . "') ";
+      }
+
+      if ($score == "") {
+        $score .= "MATCH(`Title`) AGAINST('" . $title . "')";
+      } else {
+        $score .= " + MATCH(`Title`) AGAINST('" . $title . "')";
+      }
+    }
+
+    // Author
+    if (!empty($author)) {
+      if ($where == "") {
+        $where .= "WHERE MATCH(`Author`) AGAINST('" . $author . "') ";
+      } else {
+        $where .= "AND MATCH(`Author`) AGAINST('" . $author . "') ";
+      }
+
+      if ($score == "") {
+        $score .= "MATCH(`Author`) AGAINST('" . $author . "')";
+      } else {
+        $score .= " + MATCH(`Author`) AGAINST('" . $author . "')";
+      }
+    }
+
+    // Code
+    if (!empty($code)) {
+      if ($where == "") {
+        $where .= "WHERE MATCH(`Code`) AGAINST('" . $code . "') ";
+      } else {
+        $where .= "AND MATCH(`Code`) AGAINST('" . $code . "') ";
+      }
+
+      if ($score == "") {
+        $score .= "MATCH(`Code`) AGAINST('" . $code . "')";
+      } else {
+        $score .= " + MATCH(`Code`) AGAINST('" . $code . "')";
+      }
+    }
+
+    $query = "SELECT 
+                `Book_Id`,
+                `Title`,
+                `Code`,
+                `Author`,
+                `DatePublished`";
+
+    if (!empty($score)) {
+      $query .= "," . $score . " Score";
+    }
+    $query .= " FROM `" . $this->table . "` " . $where;
+
+    if (!empty($score)) {
+      $query .= " ORDER BY $score DESC,`Title` ASC";
+    } else {
+      $query .= " ORDER BY `Title` ASC";
+    }
+    $query .= " LIMIT $limit OFFSET $offset";
+
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
+  }
+
   public function IsExistBook_Id($value)
   {
     $db = new Database();
     $mysqli = $db->mysqli;
     $query = "SELECT COUNT(*) CNT
 							FROM `" . $this->table . "`
-							WHERE `Book_Id` = '" . $db->Escape($value) . "'";
+              WHERE `Book_Id` = '" . $db->Escape($value) . "'
+              ";
     $result = $mysqli->query($query);
     $mysqli->close();
     if ($result->fetch_object()->CNT > 0) {

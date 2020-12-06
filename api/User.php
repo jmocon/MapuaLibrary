@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 session_start();
 require_once("dataaccess/Database.php");
 require_once("dataaccess/User.php");
@@ -7,8 +9,12 @@ $data = json_decode(file_get_contents('php://input'));
 // For output (JSON)
 // Must have: Success(bool), Message(any)
 $output = new stdClass;
+$func = "";
+if (!empty($data->Function)) {
+  $func = $data->Function;
+}
 
-switch ($data->Function) {
+switch ($func) {
   case 'login': {
       $idnumber = $data->IDNumber;
       $password = $data->Password;

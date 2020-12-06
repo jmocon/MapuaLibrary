@@ -111,7 +111,8 @@ function Add() {
             ' ' +
             $('#txtDateReturn_Time').val(),
           Date_Due:
-            $('#txtDateDue_Date').val() + ' ' + $('#txtDateDue_Time').val()
+            $('#txtDateDue_Date').val() + ' ' + $('#txtDateDue_Time').val(),
+          PenaltyFee: $('#txtPenaltyFee').val()
         }
       }
     };
@@ -232,7 +233,8 @@ function Update(id) {
             ' ' +
             $('#txtDateReturn_Time').val(),
           Date_Due:
-            $('#txtDateDue_Date').val() + ' ' + $('#txtDateDue_Time').val()
+            $('#txtDateDue_Date').val() + ' ' + $('#txtDateDue_Time').val(),
+          PenaltyFee: $('#txtPenaltyFee').val()
         }
       }
     };
@@ -409,6 +411,12 @@ function Form(value = '', viewing = false) {
           <input type="time" class="form-control" id="txtDateReturn_Time" />
         </div>
       </div>
+      <div class="form-group row">
+        <label for="txtPenaltyFee" class="col-3 col-form-label">Penalty Fee</label>
+        <div class="col-9">
+          <input type="number" class="form-control" id="txtPenaltyFee" />
+        </div>
+      </div>
   `;
 
   if (viewing) {
@@ -451,6 +459,7 @@ function Form(value = '', viewing = false) {
     $('#txtDateDue_Time').val(u.GetTimeInput(value.Date_Due));
     $('#txtDateReturn_Date').val(u.GetDateInput(value.Date_Return));
     $('#txtDateReturn_Time').val(u.GetTimeInput(value.Date_Return));
+    $('#txtPenaltyFee').val(value.PenaltyFee);
     SetDropdownUser(value.User_Id);
     SetDropdownInventory(value.Inventory_Id);
   } else {

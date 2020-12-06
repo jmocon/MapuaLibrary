@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 session_start();
 require_once("dataaccess/Database.php");
 require_once("dataaccess/Book.php");
@@ -11,8 +13,13 @@ $output = new stdClass;
 switch ($data->Function) {
   case 'getbyid': {
       $mdl = $clsBook->GetByBook_Id($data->Book_Id);
-      $output->Success = true;
-      $output->Modal = $mdl;
+      if (empty($mdl)) {
+        $output->Success = false;
+        $output->Message = "Book not found";
+      } else {
+        $output->Success = true;
+        $output->Modal = $mdl;
+      }
       break;
     }
   case 'dropdown': {
@@ -92,6 +99,18 @@ switch ($data->Function) {
         $output->Success = false;
         $output->Message = "No book was deleted.";
       }
+      break;
+    }
+  case 'search': {
+      $output->Success = true;
+      $output->Message = "Successfully retrieved books";
+      $k = isset($data->Keyword) ? $data->Keyword : '';
+      $c = isset($data->Code) ? $data->Code : '';
+      $t = isset($data->Title) ? $data->Title : '';
+      $a = isset($data->Author) ? $data->Author : '';
+      $l = isset($data->Limit) ? $data->Limit : 5;
+      $o = isset($data->Offset) ? $data->Offset : 0;
+      $output->List = $clsBook->SearchBook($k, $c, $t, $a, $l, $o);
       break;
     }
 

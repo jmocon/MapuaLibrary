@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 session_start();
 require_once("dataaccess/Database.php");
 require_once("dataaccess/Subject.php");

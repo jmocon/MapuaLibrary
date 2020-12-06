@@ -36,7 +36,7 @@ function DisplayInfo(userid) {
   );
 
   var data = {
-    url: 'user.php',
+    url: 'User.php',
     param: {
       Function: 'getuser',
       User_Id: userid
@@ -276,7 +276,7 @@ function AddUser() {
     u.ShowAlert(alert);
   } else {
     var data = {
-      url: 'user.php',
+      url: 'User.php',
       param: {
         Function: 'adduser',
         Modal: {
@@ -334,7 +334,7 @@ function DisplayEdit(userid) {
   $('#genricModal .modal-title').html('Edit User Details');
 
   var data = {
-    url: 'user.php',
+    url: 'User.php',
     param: {
       Function: 'getuser',
       User_Id: userid
@@ -478,7 +478,7 @@ function DisplayEdit(userid) {
 
 function SaveEdit(userid) {
   var data = {
-    url: 'user.php',
+    url: 'User.php',
     param: {
       Function: 'saveuser',
       Modal: {
@@ -536,7 +536,7 @@ function DisplayDelete(userid) {
   );
 
   var data = {
-    url: 'user.php',
+    url: 'User.php',
     param: {
       Function: 'getuser',
       User_Id: userid
@@ -649,7 +649,7 @@ function DeleteUser(userid) {
   u = new Utility();
   u.Loading('#genricModal .modal-body');
   var data = {
-    url: 'user.php',
+    url: 'User.php',
     param: {
       Function: 'deleteuser',
       User_Id: userid
@@ -715,7 +715,7 @@ function PasswordReset(userid) {
   u = new Utility();
   u.Loading('#genricModal .modal-body');
   var data = {
-    url: 'user.php',
+    url: 'User.php',
     param: {
       Function: 'resetpassword',
       User_Id: userid

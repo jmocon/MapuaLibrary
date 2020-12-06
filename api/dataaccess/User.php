@@ -1,5 +1,4 @@
 <?php
-// require_once("UserModel.php");
 $clsUser = new User();
 class User
 {

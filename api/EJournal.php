@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 session_start();
 require_once("dataaccess/Database.php");
 require_once("dataaccess/EJournal.php");
@@ -83,6 +85,19 @@ switch ($data->Function) {
       } else {
         $output->Success = false;
         $output->Message = "No e-journal was deleted.";
+      }
+      break;
+    }
+  case 'search': {
+      $output->Success = true;
+      $output->Message = "Successfully retrieved ejournals";
+      $k = isset($data->Keyword) ? $data->Keyword : '';
+      $l = isset($data->Limit) ? $data->Limit : 5;
+      $o = isset($data->Offset) ? $data->Offset : 0;
+      if ($k == "") {
+        $output->List = $clsEJournal->Search($k, $l, $o);
+      } else {
+        $output->List = $clsEJournal->Search($k, $l, $o);
       }
       break;
     }

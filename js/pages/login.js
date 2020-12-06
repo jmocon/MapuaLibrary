@@ -26,7 +26,7 @@ function Login() {
     u.ShowAlert(alert);
   } else {
     var data = {
-      url: 'user.php',
+      url: 'User.php',
       param: {
         Function: 'login',
         IDNumber: idnumber,

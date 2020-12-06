@@ -130,4 +130,44 @@ class EJournal
     }
     return $lst;
   }
+
+
+
+  public function Search($keyword, $limit = 5, $offset = 0)
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $keyword = $db->Escape($keyword);
+    $limit = $db->Escape($limit);
+    $offset = $db->Escape($offset);
+
+    $query = "SELECT J.*";
+
+    if (!empty($keyword)) {
+      $query .= ",MATCH(`Name`,`Link`,`Description`) 
+                  AGAINST('$keyword') Score";
+    }
+    $query .= " FROM `$this->table` J";
+    if (!empty($keyword)) {
+      $query .= " WHERE MATCH(`Name`,`Link`,`Description`) 
+                  AGAINST('$keyword')
+                  ORDER BY 
+                  MATCH(`Name`,`Link`,`Description`) 
+                  AGAINST('$keyword') DESC,
+                  `Name` ASC
+                  ";
+    } else {
+      $query .= " ORDER BY `Name` ASC";
+    }
+    $query .= " LIMIT $limit OFFSET $offset";
+
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
+  }
 }
