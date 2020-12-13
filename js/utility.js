@@ -84,20 +84,32 @@ class Utility {
   }
 
   GetDateInput(date) {
-    function pad(n) {
-      return n < 10 ? '0' + n : n;
+    if (date) {
+      function pad(n) {
+        return n < 10 ? '0' + n : n;
+      }
+      var d = new Date(date);
+      return d.getFullYear() + '-' + pad(d.getMonth()) + '-' + pad(d.getDate());
+    } else {
+      return null;
     }
-    var d = new Date(date);
-    return d.getFullYear() + '-' + pad(d.getMonth()) + '-' + pad(d.getDate());
   }
 
   GetTimeInput(date) {
-    function pad(n) {
-      return n < 10 ? '0' + n : n;
+    if (date) {
+      function pad(n) {
+        return n < 10 ? '0' + n : n;
+      }
+      var d = new Date(date);
+      return (
+        pad(d.getHours()) +
+        ':' +
+        pad(d.getMinutes()) +
+        ':' +
+        pad(d.getSeconds())
+      );
+    } else {
+      return null;
     }
-    var d = new Date(date);
-    return (
-      pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds())
-    );
   }
 }

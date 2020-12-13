@@ -141,22 +141,29 @@ class Subject
     return $lst;
   }
 
-  public function GetLoanPeriodByInventory_Id($value)
+  public function GetLoanPeriodByInventory_Id($inventoryId)
   {
     $db = new Database();
     $mysqli = $db->mysqli;
-    $lst = array();
+    $output = new stdClass;
 
     $query = "SELECT 
-                S.`LoanPeriod`
+                S.`LoanPeriod`,
+                S.`Penalty`,
+                S.`Overdue`
               FROM `inventory` I
               INNER JOIN `Book` B
               ON I.`Book_Id` = B.`Book_Id`
               INNER JOIN `Subject` S
               ON B.`Subject_Id` = S.`Subject_Id`
-              Where I.`Inventory_Id` = '" . $value . "'";
+              Where I.`Inventory_Id` = '{$inventoryId}'";
     $result = $mysqli->query($query);
     $mysqli->close();
-    return $result->fetch_object()->LoanPeriod;
+    $values = $result->fetch_object();
+    $output->LoanPeriod = $values->LoanPeriod;
+    $output->Penalty = $values->Penalty;
+    $output->Overdue = $values->Overdue;
+
+    return $output;
   }
 }

@@ -72,6 +72,42 @@ class User
 		return $rows;
 	}
 
+	public function UpdateLimited($mdl)
+	{
+		$db = new Database();
+		$mysqli = $db->mysqli;
+		$query = "UPDATE `{$this->table}` SET
+							`FirstName`='" . $db->Escape($mdl->FirstName) . "',
+							`MiddleName`='" . $db->Escape($mdl->MiddleName) . "',
+							`LastName`='" . $db->Escape($mdl->LastName) . "',
+							`SuffixName`='" . $db->Escape($mdl->SuffixName) . "',
+							`HomeAddress`='" . $db->Escape($mdl->HomeAddress) . "',
+							`ContactNumber`='" . $db->Escape($mdl->ContactNumber) . "',
+							`EmailAddress`='" . $db->Escape($mdl->EmailAddress) . "'
+						WHERE `User_Id`='" . $db->Escape($mdl->User_Id) . "';";
+		$mysqli->query($query);
+		$rows = $mysqli->affected_rows;
+		$mysqli->close();
+		return $rows;
+	}
+
+	public function UpdatePassword($userid, $password)
+	{
+		$db = new Database();
+		$mysqli = $db->mysqli;
+
+		$userid = $db->Escape($userid);
+		$password = $db->Escape(password_hash($password, PASSWORD_DEFAULT));
+
+		$query = "UPDATE `{$this->table}` SET
+							`Password`='{$password}'
+						WHERE `User_Id`='{$userid}';";
+		$mysqli->query($query);
+		$rows = $mysqli->affected_rows;
+		$mysqli->close();
+		return $rows;
+	}
+
 	public function UpdateDefaultPassword($userid)
 	{
 		$db = new Database();
@@ -268,6 +304,30 @@ class User
 			}
 		} else {
 			return null;
+		}
+	}
+
+	public function IsPasswordCorrect($userId, $password)
+	{
+		$db = new Database();
+		$mysqli = $db->mysqli;
+		$password = $db->Escape($password);
+
+		$query = "SELECT `Password` FROM `{$this->table}`
+							WHERE `User_Id` = '{$db->Escape($userId)}'";
+
+		$result = $mysqli->query($query);
+		$mysqli->close();
+		$mdl = $result->fetch_object();
+
+		if ($mdl) {
+			if (password_verify($password, $mdl->Password)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
 		}
 	}
 

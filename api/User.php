@@ -40,6 +40,7 @@ switch ($func) {
       $mdlUser = $clsUser->GetByUser_Id($data->User_Id);
       $output->Success = true;
       $output->Modal = $mdlUser;
+      $output->Modal->Name = $clsUser->FormatName($mdlUser);
       break;
     }
   case 'getdatatable': {
@@ -122,6 +123,47 @@ switch ($func) {
       }
       break;
     }
+  case 'saveuserlimited': {
+      $rows_affected = $clsUser->UpdateLimited($data->Modal);
+      if ($rows_affected > 0) {
+        $output->Success = true;
+        $output->Message = "Successfully Updated User.";
+      } else {
+        if ($clsUser->IsExistUser_Id($data->Modal->User_Id)) {
+          $output->Success = true;
+          $output->Message = "No changes were made.";
+        } else {
+          $output->Success = false;
+          $output->Message = "No user was updated.";
+        }
+      }
+      break;
+    }
+  case 'updatepassword': {
+      $userId = $data->User_Id;
+      $oldPassword = $data->Old_Password;
+      $newPassword = $data->New_Password;
+      if ($clsUser->IsPasswordCorrect($userId, $oldPassword)) {
+
+        $rows_affected = $clsUser->UpdatePassword($userId, $newPassword);
+        if ($rows_affected > 0) {
+          $output->Success = true;
+          $output->Message = "Successfully Updated Password.";
+        } else {
+          if ($clsUser->IsExistUser_Id($data->Modal->User_Id)) {
+            $output->Success = true;
+            $output->Message = "No changes were made.";
+          } else {
+            $output->Success = false;
+            $output->Message = "No user was updated.";
+          }
+        }
+      } else {
+        $output->Success = false;
+        $output->Message = "Incorrect Old Password.";
+      }
+      break;
+    }
   case 'deleteuser': {
       $rows_affected = $clsUser->Delete($data->User_Id);
       if ($rows_affected > 0) {
@@ -134,13 +176,13 @@ switch ($func) {
       break;
     }
   case 'resetpassword': {
-      $rows_affected = $clsUser->Delete($data->User_Id);
+      $rows_affected = $clsUser->UpdateDefaultPassword($data->User_Id);
       if ($rows_affected > 0) {
         $output->Success = true;
-        $output->Message = "Successfully Deleted User.";
+        $output->Message = "Successfully Reset User Password.";
       } else {
         $output->Success = false;
-        $output->Message = "No user was deleted.";
+        $output->Message = "No user was updated.";
       }
       break;
     }

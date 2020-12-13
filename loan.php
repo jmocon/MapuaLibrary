@@ -77,6 +77,7 @@ if (!isset($_SESSION["User_Id"])) {
                       <th>User</th>
                       <th>Book</th>
                       <th>Branch</th>
+                      <th>Status</th>
                       <th>Date Loaned</th>
                       <th>Date Due</th>
                       <th>Date Returned</th>
@@ -88,6 +89,7 @@ if (!isset($_SESSION["User_Id"])) {
                       <th>User</th>
                       <th>Book</th>
                       <th>Branch</th>
+                      <th>Status</th>
                       <th>Date Loaned</th>
                       <th>Date Due</th>
                       <th>Date Returned</th>

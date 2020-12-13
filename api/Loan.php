@@ -31,10 +31,22 @@ switch ($data->Function) {
               <button class="btn" title="Delete" data-toggle="modal" data-target="#genricModal" onclick="DisplayDelete(' . $mdl->Loan_Id . ')">
                 <i class="fas fa-trash fa-fw"></i>
               </button>';
+        if ($mdl->Status == 0) {
+          $mdl->Status = '<span class="badge badge-secondary">For Approval</span>';
+        } else if ($mdl->Status == 1) {
+          $mdl->Status = '<span class="badge badge-warning">For Claiming</span>';
+        } else if ($mdl->Status == 2) {
+          $mdl->Status = '<span class="badge badge-info">On Hand</span>';
+        } else if ($mdl->Status == 3) {
+          $mdl->Status = '<span class="badge badge-success">Returned</span>';
+        } else {
+          $mdl->Status = '<span class="badge badge-dark">Unknown</span>';
+        }
         $arr = [
           $mdl->User,
           $mdl->Book,
           $mdl->Branch,
+          $mdl->Status,
           $mdl->Date_Loan,
           $mdl->Date_Due,
           $mdl->Date_Return,
@@ -45,13 +57,7 @@ switch ($data->Function) {
       break;
     }
   case 'add': {
-      if (empty($data->Modal->Date_Due)) {
-        require_once("dataaccess/Subject.php");
-        $hours = $clsSubject->GetLoanPeriodByInventory_Id($data->Modal->Inventory_Id);
-        $date = new DateTime($data->Modal->Date_Loan);
-        $date->add(new DateInterval('PT' . $hours . 'H'));
-        $data->Modal->Date_Due = $date->format('Y-m-d H:i:s');
-      }
+
       $id = $clsLoan->Add($data->Modal);
       if ($id > 0) {
         $output->Success = true;
@@ -62,14 +68,37 @@ switch ($data->Function) {
       }
       break;
     }
-  case 'update': {
-      if (empty($data->Modal->Date_Due)) {
-        require_once("dataaccess/Subject.php");
-        $hours = $clsSubject->GetLoanPeriodByInventory_Id($data->Modal->Inventory_Id);
-        $date = new DateTime($data->Modal->Date_Loan);
-        $date->add(new DateInterval('PT' . $hours . 'H'));
-        $data->Modal->Date_Due = $date->format('Y-m-d H:i:s');
+  case 'addbybranch': {
+      require_once("dataaccess/Inventory.php");
+      $lstInventory = $clsInventory->GetAvailableBook($data->Book_Id, $data->Branch_Id);
+
+      if (count($lstInventory) > 0) {
+        $mdlInventory = $lstInventory[0];
+
+        $mdlLoan = new stdClass;
+        $mdlLoan->User_Id = $data->User_Id;
+        $mdlLoan->Inventory_Id = $mdlInventory->Inventory_Id;
+        $mdlLoan->Date_Loan = '';
+        $mdlLoan->Date_Due = '';
+        $mdlLoan->Date_Return = '';
+        $mdlLoan->PenaltyFee = 0;
+        $mdlLoan->Status = 0;
+
+        $id = $clsLoan->Add($mdlLoan);
+        if ($id > 0) {
+          $output->Success = true;
+          $output->Message = "Successfully added loan.";
+        } else {
+          $output->Success = false;
+          $output->Message = "No loan was added.";
+        }
+      } else {
+        $output->Success = false;
+        $output->Message = "No book was available on this branch.";
       }
+      break;
+    }
+  case 'update': {
       $rows_affected = $clsLoan->Update($data->Modal);
       if ($rows_affected > 0) {
         $output->Success = true;
@@ -94,6 +123,56 @@ switch ($data->Function) {
         $output->Success = false;
         $output->Message = "No loan was deleted.";
       }
+      break;
+    }
+  case 'isloaned': {
+      if ($clsLoan->IsLoaned($data->User_Id, $data->Book_Id)) {
+        $output->Success = true;
+        $output->Status = true;
+        $output->Message = "Book is Loaned.";
+      } else {
+        $output->Success = true;
+        $output->Status = false;
+        $output->Message = "Book is not Loaned.";
+      }
+      break;
+    }
+  case 'isloanedwstatus': {
+      if ($clsLoan->IsLoaned($data->User_Id, $data->Book_Id)) {
+        $status = $clsLoan->GetLoanStatus($data->User_Id, $data->Book_Id);
+        $output->Success = true;
+        $output->IsLoaned = true;
+        switch ($status) {
+          case '0':
+            $output->Status = 'For Approval';
+            break;
+          case '1':
+            $output->Status = 'For Claiming';
+            break;
+          case '2':
+            $output->Status = 'On Hand';
+            break;
+          case '3':
+            $output->Status = 'Returned';
+            break;
+          default:
+            $output->Status = 'Unknown';
+            break;
+        }
+        $output->Message = "Book is Loaned.";
+      } else {
+        $output->Success = true;
+        $output->IsLoaned = false;
+        $output->Message = "Book is not Loaned.";
+      }
+      break;
+    }
+  case 'getbookbystatus': {
+      $output->Success = true;
+      $output->Message = "Successfully retrieved books";
+      $l = isset($data->Limit) ? $data->Limit : 5;
+      $o = isset($data->Offset) ? $data->Offset : 0;
+      $output->List = $clsLoan->GetBookByStatus($data->User_Id, $data->Status, $l, $o);
       break;
     }
 

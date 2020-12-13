@@ -153,4 +153,61 @@ class Inventory
     }
     return $lst;
   }
+
+  public function GetStatusPerBranch($bookid)
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $query = "SELECT 
+                B.Branch_Id,
+                B.Name Branch,
+                (SELECT COUNT(*) 
+                  FROM `loan` L
+                  INNER JOIN `inventory` INV
+                  ON L.Inventory_Id = INV.Inventory_Id
+                  WHERE INV.Book_Id = I.Book_Id
+                  AND INV.Branch_Id = B.Branch_Id
+                  AND L.Date_Return IS NULL
+                ) Loaned,
+                COUNT(*) Total
+              FROM `branch` B
+              INNER JOIN `inventory` I
+              ON B.Branch_Id = I.Branch_Id
+              WHERE I.Book_Id = '{$db->Escape($bookid)}'
+              GROUP BY B.Branch_Id
+            ";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
+  }
+
+  // Get One Available Book In Branch based on Book_Id and Branch_Id
+  public function GetAvailableBook($bookid, $branchId)
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $query = "SELECT I.*
+                FROM `inventory` I
+                LEFT JOIN `loan` L
+                    ON I.Inventory_Id = L.Inventory_Id 
+                    AND L.Date_Return IS NULL 
+                    AND L.Status <> 3
+                WHERE Book_Id = '{$db->Escape($bookid)}'
+                AND Branch_Id = '{$db->Escape($branchId)}'
+                AND L.Inventory_Id IS NULL;
+            ";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
+  }
 }

@@ -104,6 +104,7 @@ function Add() {
         Modal: {
           User_Id: $('#selUser_Id').val(),
           Inventory_Id: $('#selInventory_Id').val(),
+          Status: $('#selStatus').val(),
           Date_Loan:
             $('#txtDateLoan_Date').val() + ' ' + $('#txtDateLoan_Time').val(),
           Date_Return:
@@ -226,6 +227,7 @@ function Update(id) {
           Loan_Id: id,
           User_Id: $('#selUser_Id').val(),
           Inventory_Id: $('#selInventory_Id').val(),
+          Status: $('#selStatus').val(),
           Date_Loan:
             $('#txtDateLoan_Date').val() + ' ' + $('#txtDateLoan_Time').val(),
           Date_Return:
@@ -382,6 +384,17 @@ function Form(value = '', viewing = false) {
         </div>
       </div>
       <div class="form-group row">
+        <label for="selStatus" class="col-3 col-form-label">Status</label>
+        <div class="col-9">
+          <select class="js-example-basic-single form-control" id="selStatus">
+            <option value="0">For Approval</option>
+            <option value="1">For Claiming</option>
+            <option value="2">On Hand</option>
+            <option value="3">Returned</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
         <label for="txtDateLoan" class="col-3 col-form-label">Date Loaned</label>
         <div class="col-5">
           <input type="date" class="form-control" id="txtDateLoan_Date" />
@@ -453,6 +466,8 @@ function Form(value = '', viewing = false) {
     }
     $('#selUser_Id').val(value.User_Id);
     $('#selInventory_Id').val(value.Inventory_Id);
+    $('#selStatus').val(value.Status);
+    $('#selStatus').trigger('change');
     $('#txtDateLoan_Date').val(u.GetDateInput(value.Date_Loan));
     $('#txtDateLoan_Time').val(u.GetTimeInput(value.Date_Loan));
     $('#txtDateDue_Date').val(u.GetDateInput(value.Date_Due));

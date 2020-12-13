@@ -87,6 +87,12 @@ switch ($data->Function) {
       }
       break;
     }
+  case 'statusperbranch': {
+      $output->Success = true;
+      $output->Message = "Successfully retrieved inventory.";
+      $output->List = $clsInventory->GetStatusPerBranch($data->Book_Id);
+      break;
+    }
 
   default:
     $output->Success = false;
