@@ -22,15 +22,15 @@ switch ($data->Function) {
       $output->data = array();
       foreach ($lst as $mdl) {
         $action = '
-              <button class="btn" title="View" data-toggle="modal" data-target="#genricModal" onclick="DisplayInfo(' . $mdl->Loan_Id . ')">
-                <i class="fas fa-eye fa-fw"></i>
-              </button>
-              <button class="btn" title="Edit" data-toggle="modal" data-target="#genricModal" onclick="DisplayEdit(' . $mdl->Loan_Id . ')">
-                <i class="fas fa-pencil-alt fa-fw"></i>
-              </button>
-              <button class="btn" title="Delete" data-toggle="modal" data-target="#genricModal" onclick="DisplayDelete(' . $mdl->Loan_Id . ')">
-                <i class="fas fa-trash fa-fw"></i>
-              </button>';
+                <button class="btn" title="View" data-toggle="modal" data-target="#genricModal" onclick="DisplayInfo(' . $mdl->Loan_Id . ')">
+                  <i class="fas fa-eye fa-fw"></i>
+                </button>
+                <button class="btn" title="Edit" data-toggle="modal" data-target="#genricModal" onclick="DisplayEdit(' . $mdl->Loan_Id . ')">
+                  <i class="fas fa-pencil-alt fa-fw"></i>
+                </button>
+                <button class="btn" title="Delete" data-toggle="modal" data-target="#genricModal" onclick="DisplayDelete(' . $mdl->Loan_Id . ')">
+                  <i class="fas fa-trash fa-fw"></i>
+                </button>';
         if ($mdl->Status == 0) {
           $mdl->Status = '<span class="badge badge-secondary">For Approval</span>';
         } else if ($mdl->Status == 1) {
@@ -53,6 +53,29 @@ switch ($data->Function) {
           $action
         ];
         array_push($output->data, $arr);
+      }
+      break;
+    }
+  case 'chart': {
+      $lst = $clsLoan->GetChart();
+      $output->Success = true;
+      $output->Label = array();
+      $output->Value = array();
+
+      $lastY = 0;
+      $lastM = 0;
+      $month = 0;
+      foreach ($lst as $mdl) {
+        if ($lastM <> 0) {
+          for ($i = $lastM + 1; $i < $mdl->MONTH; $i++) {
+            array_push($output->Value, 0);
+            array_push($output->Label, $i . '/' . $lastY);
+          }
+        }
+        array_push($output->Value, (float)$mdl->CNT);
+        array_push($output->Label, $mdl->LABEL);
+        $lastY = $mdl->YEAR;
+        $lastM = $mdl->MONTH;
       }
       break;
     }

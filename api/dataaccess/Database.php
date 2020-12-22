@@ -1,7 +1,6 @@
 <?php
 class Database
 {
-	private $conn;
 	public $mysqli;
 
 	public function Database()
@@ -18,10 +17,6 @@ class Database
 		}
 	}
 
-	public function GetConn()
-	{
-		return $this->conn;
-	}
 	public function Escape($value)
 	{
 		return $this->mysqli->real_escape_string($value);

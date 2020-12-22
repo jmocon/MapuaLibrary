@@ -216,6 +216,28 @@ class Loan
     return $lst;
   }
 
+  public function GetChart()
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+    $query = "SELECT
+              COUNT(*) CNT,
+              YEAR(Date_Loan) YEAR,
+              MONTH(Date_Loan) MONTH,
+              CONCAT(MONTH(Date_Loan) , '/' , YEAR(Date_Loan)) LABEL
+              FROM `loan`
+              WHERE Date_loan >= DATE_SUB(CURDATE(),INTERVAL 1 YEAR)
+              GROUP BY YEAR(Date_Loan), MONTH(Date_Loan)
+              ORDER BY YEAR(Date_Loan) ASC, MONTH(Date_Loan) ASC";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    while ($obj = $result->fetch_object()) {
+      $lst[] = $obj;
+    }
+    return $lst;
+  }
+
   public function DefaultValues($mdl)
   {
     require_once("Subject.php");

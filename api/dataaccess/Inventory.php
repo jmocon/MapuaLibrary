@@ -186,6 +186,24 @@ class Inventory
     return $lst;
   }
 
+  public function GetStatusCount()
+  {
+    $db = new Database();
+    $mysqli = $db->mysqli;
+    $lst = array();
+
+    $query = "SELECT
+              (SELECT COUNT(*) FROM `loan` WHERE `status` = '0') For_Approval,
+              (SELECT COUNT(*) FROM `loan` WHERE `status` = '1') For_Claiming,
+              (SELECT COUNT(*) FROM `loan` WHERE `status` = '2') On_Hand,
+              COUNT(*) Total_Books
+              FROM `inventory`;
+            ";
+    $result = $mysqli->query($query);
+    $mysqli->close();
+    return $result->fetch_object();
+  }
+
   // Get One Available Book In Branch based on Book_Id and Branch_Id
   public function GetAvailableBook($bookid, $branchId)
   {

@@ -1,3 +1,104 @@
+$(document).ready(function () {
+  DisplayCount();
+  DisplayChart();
+  setInterval(function () {
+    DisplayCount();
+    DisplayChart();
+  }, 3000);
+});
+
+function DisplayCount() {
+  u = new Utility();
+  var data = {
+    url: 'Inventory.php',
+    param: {
+      Function: 'getstatuscount'
+    }
+  };
+
+  u.SendData(data)
+    .done(function (r) {
+      var alert = {};
+      if (r.Success) {
+        $('#for_approval').html(r.For_Approval);
+        $('#for_claiming').html(r.For_Claiming);
+        $('#on_hand').html(r.On_Hand);
+        $('#total_books').html(r.Total_Books);
+      } else {
+        alert = {
+          type: 'danger',
+          message: 'Inventory not found. Kindly refresh your browser.'
+        };
+        u.ShowAlert(alert);
+      }
+    })
+    .fail(function (j, t, e) {
+      var alert = {
+        type: 'danger',
+        title: 'Failed to connect to Server',
+        message: 'Kindly refresh your browser. - ' + t + e
+      };
+      u.ShowAlert(alert);
+    });
+}
+
+function DisplayChart() {
+  u = new Utility();
+  var data = {
+    url: 'Loan.php',
+    param: {
+      Function: 'chart'
+    }
+  };
+
+  u.SendData(data)
+    .done(function (r) {
+      var alert = {};
+      if (r.Success) {
+        myLineChart.data.labels = r.Label;
+        myLineChart.data.datasets.forEach((dataset) => {
+          dataset.data = r.Value;
+        });
+        myLineChart.update();
+        // console.log();
+        // chart.data.datasets = r.Value;
+        // console.log(r.Label);
+        // console.log(r.Value);
+      } else {
+        alert = {
+          type: 'danger',
+          message: 'Loan not found. Kindly refresh your browser.'
+        };
+        u.ShowAlert(alert);
+      }
+    })
+    .fail(function (j, t, e) {
+      var alert = {
+        type: 'danger',
+        title: 'Failed to connect to Server',
+        message: 'Kindly refresh your browser. - ' + t + e
+      };
+      u.ShowAlert(alert);
+    });
+}
+
+function addData(chart, label, data) {
+  chart.data.labels.push(label);
+  chart.data.datasets.forEach((dataset) => {
+    dataset.data.push(data);
+  });
+  chart.update();
+}
+
+function removeData(chart) {
+  chart.data.labels.pop();
+  chart.data.datasets.forEach((dataset) => {
+    dataset.data.pop();
+  });
+  chart.update();
+}
+
+// Chart JS
 // Set new default font family and font color to mimic Bootstrap's default styling
 (Chart.defaults.global.defaultFontFamily = 'Nunito'),
   '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
@@ -33,23 +134,10 @@ var ctx = document.getElementById('myAreaChart');
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ],
+    labels: ['Month', '', '', '', '', '', '', '', '', '', '', ''],
     datasets: [
       {
-        label: 'Earnings',
+        label: 'Loans',
         lineTension: 0.3,
         backgroundColor: 'rgba(78, 115, 223, 0.05)',
         borderColor: 'rgba(78, 115, 223, 1)',
@@ -61,20 +149,7 @@ var myLineChart = new Chart(ctx, {
         pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: [
-          0,
-          10000,
-          5000,
-          15000,
-          10000,
-          20000,
-          15000,
-          25000,
-          20000,
-          30000,
-          25000,
-          40000
-        ]
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       }
     ]
   },
@@ -107,10 +182,11 @@ var myLineChart = new Chart(ctx, {
         {
           ticks: {
             maxTicksLimit: 5,
+            beginAtZero: true,
             padding: 10,
             // Include a dollar sign in the ticks
             callback: function (value, index, values) {
-              return '$' + number_format(value);
+              return number_format(value);
             }
           },
           gridLines: {
@@ -144,7 +220,7 @@ var myLineChart = new Chart(ctx, {
         label: function (tooltipItem, chart) {
           var datasetLabel =
             chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+          return datasetLabel + ': ' + number_format(tooltipItem.yLabel);
         }
       }
     }

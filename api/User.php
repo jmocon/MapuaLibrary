@@ -43,6 +43,12 @@ switch ($func) {
       $output->Modal->Name = $clsUser->FormatName($mdlUser);
       break;
     }
+  case 'getfirstname': {
+      $mdlUser = $clsUser->GetByUser_Id($data->User_Id);
+      $output->Success = true;
+      $output->Name = ucwords($mdlUser->FirstName);
+      break;
+    }
   case 'getdatatable': {
       $lstUser = $clsUser->GetTable();
       $output->data = array();

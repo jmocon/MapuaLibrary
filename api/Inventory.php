@@ -93,6 +93,16 @@ switch ($data->Function) {
       $output->List = $clsInventory->GetStatusPerBranch($data->Book_Id);
       break;
     }
+  case 'getstatuscount': {
+      $output->Success = true;
+      $output->Message = "Successfully retrieved count.";
+      $mdl = $clsInventory->GetStatusCount();
+      $output->For_Approval = $mdl->For_Approval;
+      $output->For_Claiming = $mdl->For_Claiming;
+      $output->On_Hand = $mdl->On_Hand;
+      $output->Total_Books = $mdl->Total_Books;
+      break;
+    }
 
   default:
     $output->Success = false;
